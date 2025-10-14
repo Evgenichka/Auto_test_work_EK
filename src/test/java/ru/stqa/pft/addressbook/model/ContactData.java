@@ -1,8 +1,12 @@
 package ru.stqa.pft.addressbook.model;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Id;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,24 +25,39 @@ public class ContactData {
   @Column(name = "lastname")
   private String lastname;
 
-  @Column(name = "home")
-  @Type(type = "text")
-  private String homePhone;
+    @Column(name = "home")
+    private String homePhone;
 
-  @Column(name = "mobile")
-  @Type(type = "text")
-  private String mobilePhone;
+    @Column(name = "mobile")
+    private String mobilePhone;
 
-  @Column(name = "work")
-  @Type(type = "text")
-  private String workPhone;
+    @Column(name = "work")
+    private String workPhone;
 
-  @Transient
-  private String allPhones;
+    @Transient
+    private String allPhones;
 
-  @Column(name = "photo")
-  @Type(type = "text")
-  private String photo;
+    @Column(name = "photo")
+    private String photo;
+
+//  @Column(name = "home")
+//  @Type(type = "text")
+//  private String homePhone;
+//
+//  @Column(name = "mobile")
+//  @Type(type = "text")
+//  private String mobilePhone;
+//
+//  @Column(name = "work")
+//  @Type(type = "text")
+//  private String workPhone;
+//
+//  @Transient
+//  private String allPhones;
+//
+//  @Column(name = "photo")
+//  @Type(type = "text")
+//  private String photo;
 
   @ManyToMany
   @JoinTable(name = "address_in_groups",
