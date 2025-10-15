@@ -1,154 +1,114 @@
 package ru.stqa.pft.addressbook.appmanager;
 
-
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.Platform;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.ie.InternetExplorerDriver;
+import lombok.Getter;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.Browser;
+import ru.stqa.pft.addressbook.model.GroupData;
+import ru.stqa.pft.addressbook.model.Groups;
 
-import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.URL;
-import java.time.Duration;
-import java.util.Properties;
-import java.util.concurrent.TimeUnit;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class ApplicationManager {
-    private final Properties properties;
-    WebDriver wd;
 
+    private final Browser selectedBrowser;
+    public WebDriver webDriver;
+
+    private SessionHelper sessionHelper;
+    @Getter
     private NavigationHelper navigationHelper;
+    @Getter
     private GroupHelper groupHelper;
-    private final String browser;
+    @Getter
     private ContactHelper contactHelper;
-    private DbHelper dbHelper;
 
-    public ApplicationManager(String browser) {
-        this.browser = browser;
-        properties = new Properties();
+
+    public ApplicationManager(Browser selectedBrowser) {
+        this.selectedBrowser = selectedBrowser;
     }
 
-    public void init() throws IOException {
-        String target = System.getProperty("target", "local");
-        properties.load(new FileReader(new File(String.format("src/test/resources/%s.properties", target))));
 
-        dbHelper = new DbHelper();
-
-        if ("".equals(properties.getProperty("selenium.server"))) {
-            switch (browser.toLowerCase()) {
-                case "firefox":
-                    System.setProperty("webdriver.gecko.driver", "/path/to/geckodriver"); // укажите полный путь к geckodriver
-                    FirefoxOptions optionsFirefox = new FirefoxOptions();
-                    wd = new FirefoxDriver(optionsFirefox);
-                    break;
-                case "chrome":
-                    System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver"); // укажите полный путь к chromedriver
-                    ChromeOptions optionsChrome = new ChromeOptions();
-                    wd = new ChromeDriver(optionsChrome);
-                    break;
-                case "ie":
-                    System.setProperty("webdriver.ie.driver", "/path/to/IEDriverServer.exe"); // укажите полный путь к IEDriverServer
-                    InternetExplorerOptions optionsIE = new InternetExplorerOptions();
-                    wd = new InternetExplorerDriver(optionsIE);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown browser: " + browser);
-            }
-        } else {
-            URL remoteURL = new URL(properties.getProperty("selenium.server"));
-
-            switch (browser.toLowerCase()) {
-                case "firefox":
-                    FirefoxOptions firefoxOptions = new FirefoxOptions();
-                    firefoxOptions.setCapability("platformName", Platform.fromString(System.getProperty("platform", "WIN10")).toString());
-                    wd = new RemoteWebDriver(remoteURL, firefoxOptions);
-                    break;
-                case "chrome":
-                    ChromeOptions chromeOptions = new ChromeOptions();
-                    chromeOptions.setCapability("platformName", Platform.fromString(System.getProperty("platform", "WIN10")).toString());
-                    wd = new RemoteWebDriver(remoteURL, chromeOptions);
-                    break;
-                case "ie":
-                    InternetExplorerOptions ieOptions = new InternetExplorerOptions();
-                    ieOptions.setCapability("platformName", Platform.fromString(System.getProperty("platform", "WIN10")).toString());
-                    wd = new RemoteWebDriver(remoteURL, ieOptions);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Unknown browser: " + browser);
-            }
+    public void initialize() {
+        if (selectedBrowser.equals(Browser.FIREFOX)) {
+            webDriver = new FirefoxDriver();
+        } else if (selectedBrowser.equals(Browser.CHROME)) {
+            webDriver = new ChromeDriver();
+        } else if (selectedBrowser.equals(Browser.EDGE)) {
+            webDriver = new EdgeDriver();
         }
 
-        wd.manage().timeouts().implicitlyWait(Duration.ofSeconds(0));
-        wd.get(properties.getProperty("web.baseUrl"));
-
-        groupHelper = new GroupHelper(wd);
-        contactHelper = new ContactHelper(wd);
-        navigationHelper = new NavigationHelper(wd);
-        SessionHelper sessionHelper = new SessionHelper(wd);
-        sessionHelper.login(properties.getProperty("web.adminLogin"), properties.getProperty("web.adminPassword"));
+        sessionHelper = new SessionHelper(webDriver);
+        navigationHelper = new NavigationHelper(webDriver);
+        groupHelper = new GroupHelper(webDriver);
+        contactHelper = new ContactHelper(webDriver);
+        webDriver.get("http://localhost/");
+        sessionHelper.login("admin","secret");
     }
 
-//    public void init() throws IOException {
-//        String target = System.getProperty("target", "local");
-//        properties.load(new FileReader(new File(String.format("src/test/resources/%s.properties", target))));
 //
-//        dbHelper = new DbHelper();
-//
-//        if ("".equals(properties.getProperty("selenium.server"))) {
-//            if (browser.equals(BrowserType.FIREFOX)) {
-//                wd = new FirefoxDriver();
-//            } else if (browser.equals(BrowserType.CHROME)) {
-//                wd = new ChromeDriver();
-//            } else if (browser.equals(BrowserType.IE)) {
-//                wd = new InternetExplorerDriver();
-//            }
-//        } else {
-//            DesiredCapabilities capabilities = new DesiredCapabilities();
-//            capabilities.setBrowserName(browser);
-//            capabilities.setPlatform(Platform.fromString(System.getProperty("platform", "win7")));
-//            wd = new RemoteWebDriver(new URL(properties.getProperty("selenium.server")), capabilities);
-//        }
-//        wd.manage().timeouts().implicitlyWait(0, TimeUnit.SECONDS);
-//        wd.get(properties.getProperty("web.baseUrl"));
-//        groupHelper = new GroupHelper(wd);
-//        contactHelper = new ContactHelper(wd);
-//        navigationHelper = new NavigationHelper(wd);
-//        SessionHelper sessionHelper = new SessionHelper(wd);
-//        sessionHelper.login(properties.getProperty("web.adminLogin"), properties.getProperty("web.adminPassword"));
-//    }
 
-    public void stop() {
-        wd.quit();
+    public void verifyGroupListInUI() {
+        if (Boolean.getBoolean("verifyUI")) {
+            // Получаем группы из UI до изменений
+            Groups beforeChange = groupHelper.all();
+
+            // Выполняем какое-либо действие (например, создание или модификацию группы)
+            // Это действие зависит от вашего сценария тестирования
+
+            // Получаем группы из UI после изменений
+            Groups afterChange = groupHelper.all();
+
+            // Преобразуем множества в списки для последовательного сравнения
+            List<GroupData> beforeList = new ArrayList<>(beforeChange);
+            List<GroupData> afterList = new ArrayList<>(afterChange);
+
+            // Сортируем списки по имени группы для надежного сравнения
+            Collections.sort(beforeList, Comparator.comparing(GroupData::getName));
+            Collections.sort(afterList, Comparator.comparing(GroupData::getName));
+
+            // Проверяем, что размер списков совпадает
+            assertThat(afterList.size(), equalTo(beforeList.size()));
+
+            // Проверяем, что каждая группа в списке после изменений соответствует группе до изменений
+            for (int i = 0; i < beforeList.size(); i++) {
+                GroupData before = beforeList.get(i);
+                GroupData after = afterList.get(i);
+
+                // Сравниваем основные свойства группы
+                assertThat(after.getName(), equalTo(before.getName()));
+                assertThat(after.getHeader(), equalTo(before.getHeader()));
+                assertThat(after.getFooter(), equalTo(before.getFooter()));
+            }
+        }
     }
 
-    public GroupHelper group() {
-        return groupHelper;
-    }
-
+    // Метод для навигации
     public NavigationHelper goTo() {
         return navigationHelper;
     }
 
-    public ContactHelper contact() {
-        return contactHelper;
+    // Метод для работы с группами
+    public GroupHelper group() {
+        return groupHelper;
     }
 
-    public DbHelper db() {
-        return dbHelper;
-    }
+//    // Метод для работы с базой данных
+//    public DbHelper db() {
+//        return dbHelper;
+//    }
 
-    public byte[] takeScreenshot() {
-        return ((TakesScreenshot) wd).getScreenshotAs(OutputType.BYTES);
+
+
+    public void stop() {
+        sessionHelper.logout();
+        webDriver.quit();
     }
 }

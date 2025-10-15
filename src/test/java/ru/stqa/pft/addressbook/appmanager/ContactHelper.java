@@ -1,91 +1,336 @@
 package ru.stqa.pft.addressbook.appmanager;
 
+import ru.stqa.pft.addressbook.model.ContactData;
+import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
-import org.testng.Assert;
-import ru.stqa.pft.addressbook.model.ContactData;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class ContactHelper extends HelperBase {
-  public ContactHelper(WebDriver wd) {
-    super(wd);
-  }
 
-  public void initContactCreation() {
-    click(By.linkText("add new"));
-  }
-
-  public void fillContactForm(ContactData contactData, boolean creation) {
-    type(By.name("firstname"), contactData.getFirstname());
-    type(By.name("lastname"), contactData.getLastname());
-    attach(By.name("photo"), contactData.getPhoto());
-
-    if (creation) {
-      if (contactData.getGroups().size() > 0) {
-        Assert.assertTrue(contactData.getGroups().size() == 1);
-        new Select(wd.findElement(By.name("new_group"))).selectByVisibleText(contactData.getGroups().iterator().next().getName());
-      }
-    } else {
-      Assert.assertFalse(isElementPresent(By.name("new_group")));
+    public ContactHelper(WebDriver wd) {
+        super(wd);
     }
-  }
 
-  public void submitContactCreation() {
-    click(By.name("submit"));
-  }
+    // Методы для работы с элементами страницы
 
-  public void returnToHomePage() {
-    click(By.linkText("home page"));
-  }
-
-  public void initContactModification() {
-    click(By.cssSelector("img[alt='Edit']"));
-  }
-
-  public void submitContactModification() {
-    click(By.name("update"));
-  }
-
-  public Set<ContactData> all() {
-    Set<ContactData> contacts = new HashSet<ContactData>();
-    List<WebElement> rows = wd.findElements(By.name("entry"));
-    for (WebElement row : rows) {
-      List<WebElement> cells = row.findElements(By.tagName("td"));
-      int id = Integer.parseInt(cells.get(0).findElement(By.tagName("input")).getAttribute("value"));
-      String lastname = cells.get(1).getText();
-      String firstname = cells.get(2).getText();
-      String allPhones = cells.get(5).getText();
-      contacts.add(new ContactData().withId(id).withFirstname(firstname).withLastname(lastname)
-              .withAllPhones(allPhones));
+    protected void clickOnElement(By locator) {
+        webDriver.findElement(locator).click();
     }
-    return contacts;
-  }
 
-  public ContactData infoFromEditForm(ContactData contact) {
-    initContactModificationById(contact.getId());
-    String firstname = wd.findElement(By.name("firstname")).getAttribute("value");
-    String lastname = wd.findElement(By.name("lastname")).getAttribute("value");
-    String home = wd.findElement(By.name("home")).getAttribute("value");
-    String mobile = wd.findElement(By.name("mobile")).getAttribute("value");
-    String work = wd.findElement(By.name("work")).getAttribute("value");
-    wd.navigate().back();
-    return new ContactData().withId(contact.getId()).withFirstname(firstname).withLastname(lastname)
-            .withHomePhone(home).withMobilePhone(mobile).withWorkPhone(work);
-  }
+    protected void typeIntoField(By locator, String text) {
+        WebElement element = webDriver.findElement(locator);
+        element.clear();
+        element.sendKeys(text);
+    }
 
-  private void initContactModificationById(int id) {
-    WebElement checkbox = wd.findElement(By.cssSelector(String.format("input[value='%s']", id)));
-    WebElement row = checkbox.findElement(By.xpath("./../.."));
-    List<WebElement> cells = row.findElements(By.tagName("td"));
-    cells.get(7).findElement(By.tagName("a")).click();
+    protected boolean isElementPresent(By locator) {
+        return !webDriver.findElements(locator).isEmpty();
+    }
 
-//    wd.findElement(By.xpath(String.format("//input[@value='%s']/../../td[8]/a", id))).click();
-//    wd.findElement(By.xpath(String.format("//tr[.//input[@value='%s']]/td[8]/a", id))).click();
-//    wd.findElement(By.cssSelector(String.format("a[href='edit.php?id=%s']", id))).click();
-  }
+    // Методы для управления контактом
+
+    public void returnToHomePage() {
+        clickOnElement(By.linkText("home page"));
+    }
+
+    public void submitContactCreation() {
+        clickOnElement(By.xpath("(//input[@name='submit'])[2]"));
+    }
+
+    public void fillContactForm(ContactData contactData, boolean creationOrEditingForm) {
+        typeIntoField(By.name("firstname"), contactData.getFirstName());
+        typeIntoField(By.name("middlename"), contactData.getMiddleName());
+        typeIntoField(By.name("lastname"), contactData.getLastName());
+        typeIntoField(By.name("nickname"), contactData.getNickname());
+        typeIntoField(By.name("company"), contactData.getCompany());
+        typeIntoField(By.name("email"), contactData.getEmail());
+
+        if (creationOrEditingForm) {
+            if (contactData.getGroup() != null) {
+                new Select(webDriver.findElement(By.name("new_group")))
+                        .selectByVisibleText(contactData.getGroup());
+            }
+        } else {
+            Assertions.assertFalse(isElementPresent(By.name("new_group")));
+        }
+    }
+
+    public void initContactDeletion() {
+        clickOnElement(By.xpath("(//input[@value='Delete'])"));
+    }
+
+    public void selectContact(int index) {
+        webDriver.findElements(By.name("selected[]")).get(index).click();
+    }
+
+    public void acceptContactDeletion() {
+        Alert contactDeletionAlert = webDriver.switchTo().alert();
+        Assertions.assertEquals("Delete 1 addresses?", contactDeletionAlert.getText());
+        contactDeletionAlert.accept();
+    }
+
+    public void initContactEditing(int index) {
+        webDriver.findElements(By.xpath("//img[@title='Edit']")).get(index).click();
+    }
+
+    public void submitContactEditing() {
+        clickOnElement(By.name("update"));
+    }
+
+    public void createContact(ContactData contactData) {
+        fillContactForm(contactData, true);
+        submitContactCreation();
+        returnToHomePage();
+    }
+
+    public boolean isContactExist() {
+        return isElementPresent(By.name("selected[]"));
+    }
+
+     //Получение списка контактов
+
+    public List<ContactData> getContactList() {
+        List<ContactData> contactsGetContactList = new ArrayList<>();
+        List<WebElement> elementsContacts = webDriver.findElements(By.cssSelector("tr[name='entry']"));
+        for (WebElement element : elementsContacts) {
+            String lastName = element.findElement(By.cssSelector("td:nth-of-type(2)")).getText();
+            String firstName = element.findElement(By.cssSelector("td:nth-of-type(3)")).getText();
+            ContactData contacts = new ContactData(firstName, null, lastName, null, null, null, null);
+            contactsGetContactList.add(contacts);
+        }
+        return contactsGetContactList;
+    }
 }
+
+//    public List<ContactData> getContactList() {
+//        List<ContactData> contacts = new ArrayList<>();
+//        List<WebElement> rows = webDriver.findElements(By.cssSelector("tr[name='entry']"));
+//
+//        for (WebElement row : rows) {
+//            String firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
+//            String middleName = ""; // Предположительно пустое значение
+//            String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
+//            String nickname = ""; // Предположительно пустое значение
+//            String company = ""; // Предположительно пустое значение
+//            String email = ""; // Предположительно пустое значение
+//            String group = ""; // Предположительно пустое значение
+//
+//            // Здесь можно добавить дополнительные поля, если они отображаются в таблице
+//
+//            ContactData contact = new ContactData(firstName, middleName, lastName, nickname, company, email, group);
+//            contacts.add(contact);
+//        }
+//   return contacts;
+//    }
+
+
+    // Если контакты содержат данные
+//        for (WebElement row : rows) {
+//            String firstName = row.findElement(By.cssSelector("td:nth-child(3)")).getText();
+//            String middleName = row.findElement(By.cssSelector("td:nth-child(4)")).getText();
+//            String lastName = row.findElement(By.cssSelector("td:nth-child(2)")).getText();
+//            String nickname = row.findElement(By.cssSelector("td:nth-child(5)")).getText();
+//            String company = row.findElement(By.cssSelector("td:nth-child(6)")).getText();
+//            String email = row.findElement(By.cssSelector("td:nth-child(7)")).getText();
+//            String group = row.findElement(By.cssSelector("td:nth-child(8)")).getText();
+//
+//            ContactData contact = new ContactData(firstName, middleName, lastName, nickname, company, email, group);
+//            contacts.add(contact);
+//        }
+
+
+
+
+
+//package ru.stqa.pft.addressbook.appmanager;
+//
+//import ru.stqa.pft.addressbook.model.ContactData;
+//import org.junit.jupiter.api.Assertions;
+//import org.openqa.selenium.Alert;
+//import org.openqa.selenium.By;
+//import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.WebElement;
+//import org.openqa.selenium.support.ui.Select;
+//import ru.stqa.pft.addressbook.model.GroupData;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//import static org.junit.jupiter.api.Assertions.assertEquals;
+//
+//public class ContactHelper extends HelperBase {
+//
+//    public List<ContactData> getContactList (){
+//        List<ContactData> contactsGetContactList = new ArrayList <>();
+//        List<WebElement> elementsContacts = webDriver.findElements(By.cssSelector("tr[name='entry']"));
+//        for (WebElement element: elementsContacts ) {
+//            String lastName = element.findElement(By.cssSelector("td:nth-of-type(2)")).getText();
+//            String firstName = element.findElement(By.cssSelector("td:nth-of-type(3)")).getText();
+//            ContactData contacts = new ContactData(firstName, null, lastName, null, null, null, null);
+//            contactsGetContactList.add (contacts);
+//        }
+//        return contactsGetContactList;
+//    };
+//
+//    public ContactHelper(WebDriver wd) {
+//        super(wd);
+//    }
+//
+//    public void returnToHomePage() {
+//        clickOnElement(By.linkText("home page"));
+//    }
+//
+//    public void submitContactCreation() {
+//        clickOnElement(By.xpath("(//input[@name='submit'])[2]"));
+//    }
+//
+//    public void fillContactForm(ContactData contactData, boolean creationOrEditingForm) {
+//        typeIntoField(By.name("firstname"), contactData.getFirstName());
+//        typeIntoField(By.name("middlename"), contactData.getMiddleName());
+//        typeIntoField(By.name("lastname"), contactData.getLastName());
+//        typeIntoField(By.name("nickname"), contactData.getNickname());
+//        typeIntoField(By.name("company"), contactData.getCompany());
+//        typeIntoField(By.name("email"), contactData.getEmail());
+//
+//        if (creationOrEditingForm) {
+//            if (contactData.getGroup() != null) {
+//                new Select(driver.findElement(By.name("new_group")))
+//                        .selectByVisibleText(contactData.getGroup());
+//            }
+//        } else {
+//            Assertions.assertFalse(isElementPresent(By.name("new_group")));
+//        }
+//    }
+//
+//    public void initContactDeletion() {
+//        clickOnElement(By.xpath("(//input[@value='Delete'])"));
+//    }
+//
+//    public void selectContact(int index) {
+//        webDriver.findElements(By.name("selected[]")).get(index).click();
+//    }
+//
+//    public void acceptContactDeletion() {
+//        Alert contactDeletionAlert = webDriver.switchTo().alert();
+//        assertEquals("Delete 1 addresses?", contactDeletionAlert.getText());
+//        contactDeletionAlert.accept();
+//    }
+//
+//    public void initContactEditing (int index) {
+//        webDriver.findElements(By.xpath("//img[@title='Edit']")).get(index).click();
+//        //clickOnElement(By.xpath("//img[@title='Edit']"));
+//    }
+//
+//    public void submitContactEditing () {
+//        clickOnElement(By.name("update"));
+//    }
+//
+//    public void createContact(ContactData contactData) {
+//        fillContactForm (contactData, true);
+//        submitContactCreation();
+//        returnToHomePage();
+//    }
+//
+//    public boolean isContactExist() {
+//        return isElementPresent(By.name("selected[]"));
+//    }
+//}
+
+//package ru.stqa.pft.addressbook.appmanager;
+//
+//import ru.stqa.pft.addressbook.model.ContactData;
+//import org.junit.jupiter.api.Assertions;
+//import org.openqa.selenium.Alert;
+//import org.openqa.selenium.By;
+//import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.WebElement;
+//import org.openqa.selenium.support.ui.Select;
+//import ru.stqa.pft.addressbook.model.GroupData;
+//
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//import static org.junit.jupiter.api.Assertions.assertEquals;
+//
+//public class ContactHelper extends HelperBase {
+//
+//    public List<ContactData> getContactList() {
+//        List<ContactData> contactsGetContactList = new ArrayList<>();
+//        List<WebElement> elementsContacts = webDriver.findElements(By.cssSelector("tr[name='entry']"));
+//        for (WebElement element : elementsContacts) {
+//            String lastName = element.findElement(By.cssSelector("td:nth-of-type(2)")).getText();
+//            String firstName = element.findElement(By.cssSelector("td:nth-of-type(3)")).getText();
+//            ContactData contacts = new ContactData(firstName, null, lastName, null, null, null, null);
+//            contactsGetContactList.add(contacts);
+//        }
+//        return contactsGetContactList;
+//    }
+//
+//    public ContactHelper(WebDriver wd) {
+//        super(wd);
+//    }
+//
+//    public void returnToHomePage() {
+//        clickOnElement(By.linkText("home page"));
+//    }
+//
+//    public void submitContactCreation() {
+//        clickOnElement(By.xpath("(//input[@name='submit'])[2]"));
+//    }
+//
+//    public void fillContactForm(ContactData contactData, boolean creationOrEditingForm) {
+//        typeIntoField(By.name("firstname"), contactData.getFirstName());
+//        typeIntoField(By.name("middlename"), contactData.getMiddleName());
+//        typeIntoField(By.name("lastname"), contactData.getLastName());
+//        typeIntoField(By.name("nickname"), contactData.getNickname());
+//        typeIntoField(By.name("company"), contactData.getCompany());
+//        typeIntoField(By.name("email"), contactData.getEmail());
+//
+//        if (creationOrEditingForm) {
+//            if (contactData.getGroup() != null) {
+//                new Select(webDriver.findElement(By.name("new_group")))
+//                        .selectByVisibleText(contactData.getGroup());
+//            }
+//        } else {
+//            Assertions.assertFalse(isElementPresent(By.name("new_group")));
+//        }
+//    }
+//
+//    public void initContactDeletion() {
+//        clickOnElement(By.xpath("(//input[@value='Delete'])"));
+//    }
+//
+//    public void selectContact(int index) {
+//        webDriver.findElements(By.name("selected[]")).get(index).click();
+//    }
+//
+//    public void acceptContactDeletion() {
+//        Alert contactDeletionAlert = webDriver.switchTo().alert();
+//        assertEquals("Delete 1 addresses?", contactDeletionAlert.getText());
+//        contactDeletionAlert.accept();
+//    }
+//
+//    public void initContactEditing(int index) {
+//        webDriver.findElements(By.xpath("//img[@title='Edit']")).get(index).click();
+//    }
+//
+//    public void submitContactEditing() {
+//        clickOnElement(By.name("update"));
+//    }
+//
+//    public void createContact(ContactData contactData) {
+//        fillContactForm(contactData, true);
+//        submitContactCreation();
+//        returnToHomePage();
+//    }
+//
+//    public boolean isContactExist() {
+//        return isElementPresent(By.name("selected[]"));
+//    }
+//}

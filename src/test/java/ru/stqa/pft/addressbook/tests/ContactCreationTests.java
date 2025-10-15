@@ -1,23 +1,40 @@
 package ru.stqa.pft.addressbook.tests;
 
 import ru.stqa.pft.addressbook.model.ContactData;
-import ru.stqa.pft.addressbook.model.Groups;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-import java.io.File;
+import java.util.Comparator;
+import java.util.List;
 
 public class ContactCreationTests extends TestBase {
 
-  @Test
-  public void testContactCreation() {
-    Groups groups = app.db().groups();
-    File photo = new File("src/test/resources/stru.png");
-    ContactData newContact = new ContactData().withFirstname("test_name").withLastname("test_surname").withPhoto(photo)
-            .inGroup(groups.iterator().next());
-    app.goTo().gotoHomePage();
-    app.contact().initContactCreation();
-    app.contact().fillContactForm(newContact, true);
-    app.contact().submitContactCreation();
-    app.contact().returnToHomePage();
-  }
+    @Test
+    public void contactCreation() {
+        List<ContactData> beforeContactList = appManager.getContactHelper().getContactList();
+        appManager.getNavigationHelper().goToContactPage();
+        ContactData contactForList = new ContactData(
+                "TestFirstName",
+                "TestMiddleName",
+                "TestLastName",
+                "TestNickname",
+                "TestCompany",
+                "TestEmail",
+                "GroupName"
+        );
+        appManager.getContactHelper().fillContactForm(contactForList, true);
+        appManager.getContactHelper().submitContactCreation();
+        appManager.getContactHelper().returnToHomePage();
+        List<ContactData> afterContactList = appManager.getContactHelper().getContactList();
+        Assertions.assertEquals(afterContactList.size(), beforeContactList.size() + 1);
 
+        beforeContactList.add(contactForList);
+        // Измените comparator, добавив методы доступа
+        Comparator<? super ContactData> byLastAndFirstName = Comparator.comparing(ContactData::getLastName)
+                .thenComparing(ContactData::getFirstName);
+
+        beforeContactList.sort(byLastAndFirstName);
+        afterContactList.sort(byLastAndFirstName);
+        Assertions.assertEquals(beforeContactList, afterContactList);
+    }
 }

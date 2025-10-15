@@ -1,116 +1,88 @@
+//package ru.stqa.pft.addressbook.model;
+//
+//import lombok.Data;
+//
+//@Data
+//public class GroupData {
+//
+//    private int id;
+//    private String name;
+//    private String header;
+//    private String footer;
+//
+//    public GroupData(int id, String name, String header, String footer) {
+//        this.id = id;
+//        this.name = name;
+//        this.header = header;
+//        this.footer = footer;
+//    }
+//
+//    public GroupData(String name, String header, String footer) {
+//        this(Integer.MAX_VALUE, name, header, footer);
+//    }
+//}
+
+
 package ru.stqa.pft.addressbook.model;
 
-import com.google.gson.annotations.Expose;
-import com.thoughtworks.xstream.annotations.XStreamAlias;
-import com.thoughtworks.xstream.annotations.XStreamOmitField;
-import org.hibernate.annotations.Type;
+import lombok.Data;
+import org.openqa.selenium.By;
 
-import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-
-@XStreamAlias("group")
-@Entity
-@Table(name = "group_list")
+@Data
 public class GroupData {
-  @XStreamOmitField
-  @Id
-  @Column(name = "group_id")
-  private int id = Integer.MAX_VALUE;
 
-  @Expose
-  @Column(name = "group_name")
-  private String name;
-
-    @Expose
-    @Column(name = "group_header")
+    private Integer id;
+    private String name;
     private String header;
-
-    @Expose
-    @Column(name = "group_footer")
     private String footer;
 
-//  @Expose
-//  @Column(name = "group_header")
-//  @Type(type = "text")
-//  private String header;
-//
-//  @Expose
-//  @Column(name = "group_footer")
-//  @Type(type = "text")
-//  private String footer;
+    // Конструктор с передачей всех полей
+    public GroupData(Integer id, String name, String header, String footer) {
+        this.id = id;
+        this.name = name;
+        this.header = header;
+        this.footer = footer;
+    }
 
-  @ManyToMany(mappedBy = "groups")
-  private Set<ContactData> contacts = new HashSet<ContactData>();
+    // Конструктор без параметров (может понадобиться)
+    public GroupData() {
+    }
 
-  public Set<ContactData> getContacts() {
-    return contacts;
-  }
+    // Второй конструктор с параметрами без id
+    public GroupData(String name, String header, String footer) {
+        this(null, name, header, footer);
+    }
 
-  public int getId() {
-    return id;
-  }
+    // Конструктор только с id и name
+    public GroupData(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
-  public GroupData withId(int id) {
-    this.id = id;
-    return this;
-  }
+    // Builder-style методы для формирования объекта
+    public GroupData withId(Integer id) {
+        this.id = id;
+        return this;
+    }
 
-  public GroupData withFooter(String footer) {
-    this.footer = footer;
-    return this;
-  }
+    public GroupData withName(String name) {
+        this.name = name;
+        return this;
+    }
 
-  public GroupData withHeader(String header) {
-    this.header = header;
-    return this;
-  }
+    public GroupData withHeader(String header) {
+        this.header = header;
+        return this;
+    }
 
-  public GroupData withName(String name) {
-    this.name = name;
-    return this;
-  }
+    public GroupData withFooter(String footer) {
+        this.header = footer;
+        return this;
+    }
 
-  public String getName() {
-    return name;
-  }
-
-  public String getHeader() {
-    return header;
-  }
-
-  public String getFooter() {
-    return footer;
-  }
-
-  @Override
-  public String toString() {
-    return "GroupData{" +
-            "id='" + id + '\'' +
-            ", name='" + name + '\'' +
-            '}';
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    GroupData groupData = (GroupData) o;
-
-    if (id != groupData.id) return false;
-    if (name != null ? !name.equals(groupData.name) : groupData.name != null) return false;
-    if (header != null ? !header.equals(groupData.header) : groupData.header != null) return false;
-    return footer != null ? footer.equals(groupData.footer) : groupData.footer == null;
-
-  }
-
-  @Override
-  public int hashCode() {
-    int result = id;
-    result = 31 * result + (name != null ? name.hashCode() : 0);
-    result = 31 * result + (header != null ? header.hashCode() : 0);
-    result = 31 * result + (footer != null ? footer.hashCode() : 0);
-    return result;
-  }
+    // Метод доступа к полю id
+    public int getId() {
+        return id != null ? id : 0; // Для гарантии возвращения числового значения
+    }
 }
+
