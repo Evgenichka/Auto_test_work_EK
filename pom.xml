@@ -50,6 +50,12 @@
         </dependency>
 
         <!-- Selenium -->
+        <!-- Включаем конкретную версию CDP -->
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-devtools-v114</artifactId>
+            <version>4.11.0</version>
+        </dependency>
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
@@ -62,6 +68,7 @@
             <version>6.3.2</version>
             <scope>test</scope>
         </dependency>
+
 
         <!-- SLF4J simple -->
         <dependency>

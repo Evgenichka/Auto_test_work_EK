@@ -95,6 +95,10 @@ public class ApplicationManager {
         return navigationHelper;
     }
 
+    public ContactHelper contact() {
+        return contact();
+    }
+
     // Метод для работы с группами
     public GroupHelper group() {
         return groupHelper;
@@ -111,4 +115,6 @@ public class ApplicationManager {
         sessionHelper.logout();
         webDriver.quit();
     }
+
+
 }

@@ -1,4 +1,4 @@
-//package ru.stqa.pft.addressbook.model;
+
 //
 //import lombok.Data;
 //
@@ -50,7 +50,9 @@
 
 package ru.stqa.pft.addressbook.model;
 
+import java.util.Arrays;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ContactData {
 
@@ -80,6 +82,9 @@ public class ContactData {
     private String notes;
     private String photoPath;
     private String group; // Новое поле для группы
+
+    // Добавляем пустой конструктор
+    public ContactData() {}
 
     // Конструктор с минимальным набором полей
     public ContactData(String firstName, String middleName, String lastName, String nickname,
@@ -130,6 +135,8 @@ public class ContactData {
     }
 
     // Геттеры и сеттеры для всех полей
+
+
 
     public String getFirstName() {
         return firstName;
@@ -331,13 +338,145 @@ public class ContactData {
         this.photoPath = photoPath;
     }
 
-    // Геттер и сеттер для группы
+
     public String getGroup() {
         return group;
     }
 
     public void setGroup(String group) {
         this.group = group;
+    }
+
+
+    // Fluent-методы для каждого поля
+
+    public ContactData withFirstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+
+    public ContactData withMiddleName(String middleName) {
+        this.middleName = middleName;
+        return this;
+    }
+
+    public ContactData withLastName(String lastName) {
+        this.lastName = lastName;
+        return this;
+    }
+
+    public ContactData withNickname(String nickname) {
+        this.nickname = nickname;
+        return this;
+    }
+
+    public ContactData withTitle(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public ContactData withCompany(String company) {
+        this.company = company;
+        return this;
+    }
+
+    public ContactData withAddress(String address) {
+        this.address = address;
+        return this;
+    }
+
+    public ContactData withHomePhone(String homePhone) {
+        this.homePhone = homePhone;
+        return this;
+    }
+
+    public ContactData withMobilePhone(String mobilePhone) {
+        this.mobilePhone = mobilePhone;
+        return this;
+    }
+
+    public ContactData withWorkPhone(String workPhone) {
+        this.workPhone = workPhone;
+        return this;
+    }
+
+    public ContactData withFax(String fax) {
+        this.fax = fax;
+        return this;
+    }
+
+    public ContactData withEmail(String email) {
+        this.email = email;
+        return this;
+    }
+
+    public ContactData withEmail2(String email2) {
+        this.email2 = email2;
+        return this;
+    }
+
+    public ContactData withEmail3(String email3) {
+        this.email3 = email3;
+        return this;
+    }
+
+    public ContactData withHomepage(String homepage) {
+        this.homepage = homepage;
+        return this;
+    }
+
+    public ContactData withBirthdayDay(String birthdayDay) {
+        this.birthdayDay = birthdayDay;
+        return this;
+    }
+
+    public ContactData withBirthdayMonth(String birthdayMonth) {
+        this.birthdayMonth = birthdayMonth;
+        return this;
+    }
+
+    public ContactData withBirthdayYear(String birthdayYear) {
+        this.birthdayYear = birthdayYear;
+        return this;
+    }
+
+    public ContactData withAnniversaryDay(String anniversaryDay) {
+        this.anniversaryDay = anniversaryDay;
+        return this;
+    }
+
+    public ContactData withAnniversaryMonth(String anniversaryMonth) {
+        this.anniversaryMonth = anniversaryMonth;
+        return this;
+    }
+
+    public ContactData withAnniversaryYear(String anniversaryYear) {
+        this.anniversaryYear = anniversaryYear;
+        return this;
+    }
+
+    public ContactData withSecondaryAddress(String secondaryAddress) {
+        this.secondaryAddress = secondaryAddress;
+        return this;
+    }
+
+    public ContactData withPhone2(String phone2) {
+        this.phone2 = phone2;
+        return this;
+    }
+
+    public ContactData withNotes(String notes) {
+        this.notes = notes;
+        return this;
+    }
+
+
+    // Геттеры и сеттеры для телефонов...
+
+    public String getAllPhones() {
+        return Arrays.asList(getHomePhone(), getMobilePhone(), getWorkPhone())
+                .stream().filter((s) -> !s.equals(""))
+                .collect(Collectors.joining("\n"));
     }
 
     // Метод equals для сравнения объектов
@@ -415,4 +554,7 @@ public class ContactData {
                 ", group='" + group + '\'' + // Добавляем вывод группы
                 '}';
     }
+
+
+
 }

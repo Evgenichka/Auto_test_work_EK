@@ -34,14 +34,7 @@ public class GroupCreationTests extends TestBase {
         checkGroupCreation(oldGroups, newGroup, newGroups);
     }
 
-//    // Метод для проверки правильности созданной группы
-//    private void checkGroupCreation(List<GroupData> oldGroups, GroupData newGroup, List<GroupData> newGroups) {
-//        oldGroups.add(newGroup);
-//        Comparator<? super GroupData> byId = Comparator.comparingInt(GroupData::id);
-//        oldGroups.sort(byId);
-//        newGroups.sort(byId);
-//        Assertions.assertEquals(oldGroups, newGroups);
-//    }
+
 // Метод для проверки правильности созданной группы
 private void checkGroupCreation(List<GroupData> oldGroups, GroupData newGroup, List<GroupData> newGroups) {
     oldGroups.add(newGroup);

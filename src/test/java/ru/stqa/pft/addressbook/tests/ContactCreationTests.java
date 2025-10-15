@@ -20,7 +20,7 @@ public class ContactCreationTests extends TestBase {
                 "TestNickname",
                 "TestCompany",
                 "TestEmail",
-                "GroupName"
+                "TestGroupName"
         );
         appManager.getContactHelper().fillContactForm(contactForList, true);
         appManager.getContactHelper().submitContactCreation();
