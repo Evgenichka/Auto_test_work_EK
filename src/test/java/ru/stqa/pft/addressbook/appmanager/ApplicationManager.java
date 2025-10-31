@@ -52,7 +52,7 @@ public class ApplicationManager {
         navigationHelper = new NavigationHelper(webDriver);
         groupHelper = new GroupHelper(webDriver);
         contactHelper = new ContactHelper(webDriver);
-        webDriver.get("http://localhost/");
+        webDriver.get("http://localhost/addressbook");
         sessionHelper.login("admin","secret");
     }
 
