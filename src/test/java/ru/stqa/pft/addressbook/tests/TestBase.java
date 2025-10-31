@@ -13,7 +13,7 @@ import org.openqa.selenium.remote.Browser;
 
 public class TestBase {
 
-    protected final ApplicationManager appManager = new ApplicationManager(Browser.CHROME);
+    protected static final ApplicationManager appManager = new ApplicationManager(Browser.CHROME);
 
     @BeforeEach
     public void setUp() {

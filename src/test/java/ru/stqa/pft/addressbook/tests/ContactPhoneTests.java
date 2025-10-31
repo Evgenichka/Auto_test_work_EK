@@ -14,7 +14,7 @@ public class ContactPhoneTests extends TestBase {
 
     @Test
     public void testContactPhones() {
-        appManager.goTo().goToHomePage(); // Обращаемся к appManager
+        appManager.goTo().HomePage(); // Обращаемся к appManager
         ContactData contact = appManager.contact().all().iterator().next();
         ContactData contactInfoFromEditForm = appManager.contact().infoFromEditForm(contact);
 

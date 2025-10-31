@@ -9,25 +9,18 @@ public class NavigationHelper extends HelperBase {
         super(wd);
     }
 
-    public void goToContactPage() {
-        if (isElementPresent(By.tagName("h1"))
-                && webDriver.findElement(By.tagName("h1")).getText().equals("Edit / add address book entry")
-                && isElementPresent(By.name("submit"))){
-            return;
-        }
-        clickOnElement(By.linkText("add new"));
-    }
+//   /
 
-    public void goToGroupPage() {
+    public void GroupPage() {
         if (isElementPresent(By.tagName("h1"))
-                && webDriver.findElement(By.tagName("h1")).getText().equals("Groups")
+                && wd.findElement(By.tagName("h1")).getText().equals("Groups")
                 && isElementPresent(By.name("new"))) {
             return;
         }
         clickOnElement(By.linkText("groups"));
     }
 
-    public void goToHomePage() {
+    public void HomePage() {
         if (isElementPresent(By.id("maintable"))){
             return;
         }
@@ -35,6 +28,18 @@ public class NavigationHelper extends HelperBase {
     }
 
     public void groupPage() {
-        webDriver.navigate().to("страница-групп-вашего-приложения");
+        wd.navigate().to("страница-групп-вашего-приложения");
     }
-}
+
+
+    public void contactPage() {
+        if (isElementPresent(By.tagName("h1"))
+                && wd.findElement(By.tagName("h1")).getText().equals("Edit / add address book entry")
+                && isElementPresent(By.name("submit"))){
+            return;
+    }
+            clickOnElement(By.linkText("add new"));
+        }
+    }
+
+

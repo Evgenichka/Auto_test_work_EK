@@ -1,64 +1,103 @@
 package ru.stqa.pft.addressbook.tests;
 
 
+import org.testng.annotations.BeforeMethod;
 import ru.stqa.pft.addressbook.model.ContactData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import ru.stqa.pft.addressbook.model.Contacts;
 
 import java.util.Comparator;
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.MatcherAssert.assertThat;
+
 public class ContactModificationTests extends TestBase {
 
-    @Test
-    public void contactEditing() {
-        // Создаем объект для редактирования с начальными данными
-        ContactData originalContact = new ContactData("OriginalFirstName", "OriginalMiddleName", "OriginalLastName", "Original", "OriginalCompany", "original@mail.com", null);
-
-        // Создаем объект с изменёнными данными
-        ContactData updatedContact = new ContactData("UpdatedFirstName", "UpdatedMiddleName", "UpdatedLastName", "Updated", "UpdatedCompany", "updated@mail.com", null);
-
-        // Если контакта нет, добавляем оригинал
-        if (!appManager.getContactHelper().isContactExist()) {
-            appManager.getNavigationHelper().goToContactPage();
-            appManager.getContactHelper().createContact(originalContact);
+    @BeforeMethod
+    public static void contactEditingPreconditionsCheck() {
+        appManager.goTo().HomePage();
+        if (appManager.contact().all().isEmpty()){
+            appManager.goTo().contactPage();
+            appManager.contact().create(new ContactData()
+                    .withFirstName("TestFirstName").withMiddleName("TestMiddleName")
+                    .withLastName("TestLastName").withNickname("TestNickname")
+                    .withCompany("TestCompany").withAddress("TestAddress").
+                    withFirstEmail("TestEmail").withGroup("GroupName")
+                    .withHomePhone("440036").withMobilePhone("+79998887766").withWorkPhone("88412256621"));
         }
-
-        // Получаем список контактов до изменений
-        List<ContactData> beforeContactList = appManager.getContactHelper().getContactList();
-
-        // Начинаем редактирование первого контакта
-        appManager.getContactHelper().initContactEditing(0); // Меняем первый контакт
-
-        // Заполняем форму с изменёнными данными
-        appManager.getContactHelper().fillContactForm(updatedContact, false);
-
-        // Подтверждаем изменения
-        appManager.getContactHelper().submitContactEditing();
-
-        // Возвращаемся на главную страницу
-        appManager.getContactHelper().returnToHomePage();
-
-        // Получаем список контактов после изменений
-        List<ContactData> afterContactList = appManager.getContactHelper().getContactList();
-
-        // Утверждаем, что количество контактов не изменилось
-        Assertions.assertEquals(afterContactList.size(), beforeContactList.size());
-
-        // Заменяем первоначальный контакт на обновлённый
-        beforeContactList.set(0, updatedContact); // Замещаем первым элементом
-
-        // Сравниваем контакты после сортировки
-        Comparator<? super ContactData> byLastAndFirstName = Comparator.comparing(ContactData::getLastName)
-                .thenComparing(ContactData::getFirstName);
-
-        beforeContactList.sort(byLastAndFirstName);
-        afterContactList.sort(byLastAndFirstName);
-
-        // Утверждаем, что списки равны
-        Assertions.assertEquals(beforeContactList, afterContactList);
     }
 
+    @Test
+    public void contactEditing () {
+        Contacts beforeContactList = (Contacts) appManager.contact().all();
+        ContactData editedContact = beforeContactList.iterator().next();
+        Assertions.assertNotNull(editedContact);
+        ContactData contactDataForEditing = (new ContactData().withId(editedContact.getId())
+                .withFirstName("Test1Name").withMiddleName("Test2Name")
+                .withLastName("Test3Name").withNickname("Test4Nickname")
+                .withCompany("Test5Company").withAddress("Test6Address")
+                .withFirstEmail("test7@mail.com").withGroup("GroupName")
+                .withHomePhone("")).withMobilePhone("").withWorkPhone("");
 
-
+        appManager.contact().modify(contactDataForEditing);
+        assertThat(appManager.contact().count(), equalTo(beforeContactList.size()));
+        Contacts afterContactList = (Contacts) appManager.contact().all();
+        assertThat(afterContactList, equalTo(beforeContactList.without(editedContact).withAdded(contactDataForEditing)));
+    }
 }
+
+
+//    @Test
+//    public void contactEditing() {
+//        // Создаем объект для редактирования с начальными данными
+//        ContactData originalContact = new ContactData("OriginalFirstName", "OriginalMiddleName", "OriginalLastName", "Original", "OriginalCompany", "original@mail.com", null);
+//
+//        // Создаем объект с изменёнными данными
+//        ContactData updatedContact = new ContactData("UpdatedFirstName", "UpdatedMiddleName", "UpdatedLastName", "Updated", "UpdatedCompany", "updated@mail.com", null);
+//
+//        // Если контакта нет, добавляем оригинал
+//        if (!appManager.getContactHelper().isContactExist()) {
+//            appManager.getNavigationHelper().goToContactPage();
+//            appManager.getContactHelper().createContact(originalContact);
+//        }
+//
+//        // Получаем список контактов до изменений
+//        List<ContactData> beforeContactList = appManager.getContactHelper().getContactList();
+//
+//        // Начинаем редактирование первого контакта
+//        appManager.getContactHelper().initContactEditing(0); // Меняем первый контакт
+//
+//        // Заполняем форму с изменёнными данными
+//        appManager.getContactHelper().fillContactForm(updatedContact, false);
+//
+//        // Подтверждаем изменения
+//        appManager.getContactHelper().submitContactEditing();
+//
+//        // Возвращаемся на главную страницу
+//        appManager.getContactHelper().returnToHomePage();
+//
+//        // Получаем список контактов после изменений
+//        List<ContactData> afterContactList = appManager.getContactHelper().getContactList();
+//
+//        // Утверждаем, что количество контактов не изменилось
+//        Assertions.assertEquals(afterContactList.size(), beforeContactList.size());
+//
+//        // Заменяем первоначальный контакт на обновлённый
+//        beforeContactList.set(0, updatedContact); // Замещаем первым элементом
+//
+//        // Сравниваем контакты после сортировки
+//        Comparator<? super ContactData> byLastAndFirstName = Comparator.comparing(ContactData::getLastName)
+//                .thenComparing(ContactData::getFirstName);
+//
+//        beforeContactList.sort(byLastAndFirstName);
+//        afterContactList.sort(byLastAndFirstName);
+//
+//        // Утверждаем, что списки равны
+//        Assertions.assertEquals(beforeContactList, afterContactList);
+//    }
+//
+//
+//
+//}

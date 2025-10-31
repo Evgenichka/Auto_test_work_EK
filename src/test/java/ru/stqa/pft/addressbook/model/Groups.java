@@ -2,10 +2,9 @@ package ru.stqa.pft.addressbook.model;
 
 import com.google.common.collect.ForwardingSet;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class Groups extends ForwardingSet<GroupData> {
 
@@ -38,5 +37,13 @@ public class Groups extends ForwardingSet<GroupData> {
         Groups groups = new Groups(this);
         groups.remove(group);
         return groups;
+    }
+
+
+    private final List<GroupData> storage = new ArrayList<>(); // объявляем коллекцию
+
+    // Метод для получения группы по индексу
+    public GroupData get(int index) {
+        return storage.get(index); // Доступ к элементу по индексу
     }
 }
