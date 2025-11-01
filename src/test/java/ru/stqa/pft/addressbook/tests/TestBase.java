@@ -1,6 +1,6 @@
 package ru.stqa.pft.addressbook.tests;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import ru.stqa.pft.addressbook.appmanager.ApplicationManager;
@@ -11,13 +11,13 @@ import org.openqa.selenium.remote.Browser;
 
 
 
+
 public class TestBase {
 
     protected static final ApplicationManager appManager = new ApplicationManager(Browser.CHROME);
 
     @BeforeEach
     public void setUp() {
-        WebDriverManager.chromedriver().setup();
         appManager.initialize();
     }
 
@@ -25,4 +25,6 @@ public class TestBase {
     public void tearDown() {
         appManager.stop();
     }   }
+
+
 

@@ -12,19 +12,6 @@ public class ContactData {
     private String company;
     private String address;
     private String allEmail;
-
-    public String getAllEmail() {
-        return allEmail;
-    }
-
-//    public String getEmail() {
-//        String email = null;
-//        return email;
-//    }
-
-
-
-
     private String firstEmail;
     private String secondEmail;
     private String thirdEmail;
@@ -34,21 +21,69 @@ public class ContactData {
     private String mobilePhone;
     private String workPhone;
 
-    public int getId() {return id;}
-    public String getFirstName() {return firstName;}
-    public String getMiddleName() {return middleName;}
-    public String getLastName() {return lastName;}
-    public String getNickname() {return nickname;}
-    public String getCompany() {return company;}
-    public String getAddress() {return address;}
-    public String getFirstEmail() {return firstEmail;}
-    public String getSecondEmail() {return secondEmail;}
-    public String getThirdEmail() {return thirdEmail;}
-    public String getGroup() {return group;}
-    public String getAllPhones() {return allPhones;}
-    public String getHomePhone() {return homePhone;}
-    public String getMobilePhone() {return mobilePhone;}
-    public String getWorkPhone() {return workPhone;}
+    public int getId() {
+        return id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getCompany() {
+        return company;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getFirstEmail() {
+        return firstEmail;
+    }
+
+    public String getSecondEmail() {
+        return secondEmail;
+    }
+
+    public String getThirdEmail() {
+        return thirdEmail;
+    }
+
+    public String getGroup() {
+        return group;
+    }
+
+    public String getAllPhones() {
+        return allPhones;
+    }
+
+    public String getHomePhone() {
+        return homePhone;
+    }
+
+    public String getMobilePhone() {
+        return mobilePhone;
+    }
+
+    public String getWorkPhone() {
+        return workPhone;
+    }
+
+    public String getAllEmail() {
+        return allEmail;
+    }
 
     public ContactData withId(int id) {
         this.id = id;
@@ -130,6 +165,19 @@ public class ContactData {
         return this;
     }
 
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (!(o instanceof ContactData)) return false;
+//        ContactData that = (ContactData) o;
+//        return getId() == that.getId() &&
+//                Objects.equals(getFirstName(), that.getFirstName()) &&
+//                Objects.equals(getLastName(), that.getLastName()) &&
+//                Objects.equals(getEmail(), that.getEmail()) &&
+//                // остальные поля...
+//                ;
+//    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -144,10 +192,10 @@ public class ContactData {
         result = 31 * result + Objects.hashCode(firstName);
         result = 31 * result + Objects.hashCode(lastName);
         return result;
-    }
+    }}
 
 
-}
+
 
 
 ////

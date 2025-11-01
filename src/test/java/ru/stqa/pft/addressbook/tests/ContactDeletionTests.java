@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class ContactDeletionTests extends TestBase { // Перименовали класс на ContactDeletionTests
+public class ContactDeletionTests extends TestBase {
 
     @BeforeEach
-    public void prepareContactDeletion() { // Переименовали метод на prepareContactDeletion
+    public void prepareContactDeletion() {
         appManager.goTo().homePage();
         if (appManager.contact().all().isEmpty()) {
             appManager.goTo().contactPage();
@@ -36,3 +36,4 @@ public class ContactDeletionTests extends TestBase { // Перименовали
         assertThat(afterContactList, equalTo(beforeContactList.without(deletedContact)));
     }
 }
+

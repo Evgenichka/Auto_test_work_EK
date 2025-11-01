@@ -9,37 +9,28 @@ public class NavigationHelper extends HelperBase {
         super(wd);
     }
 
-//   /
-
-    public void GroupPage() {
+    public void contactPage() {
         if (isElementPresent(By.tagName("h1"))
-                && wd.findElement(By.tagName("h1")).getText().equals("Groups")
+                && webDriver.findElement(By.tagName("h1")).getText().equals("Edit / add address book entry")
+                && isElementPresent(By.name("submit"))){
+            return;
+        }
+        clickOnElement(By.linkText("add new"));
+    }
+
+    public void groupPage() {
+        if (isElementPresent(By.tagName("h1"))
+                && webDriver.findElement(By.tagName("h1")).getText().equals("Groups")
                 && isElementPresent(By.name("new"))) {
             return;
         }
         clickOnElement(By.linkText("groups"));
     }
 
-    public void HomePage() {
+    public void homePage() {
         if (isElementPresent(By.id("maintable"))){
             return;
         }
         clickOnElement(By.linkText("home"));
     }
-
-    public void groupPage() {
-        wd.navigate().to("страница-групп-вашего-приложения");
-    }
-
-
-    public void contactPage() {
-        if (isElementPresent(By.tagName("h1"))
-                && wd.findElement(By.tagName("h1")).getText().equals("Edit / add address book entry")
-                && isElementPresent(By.name("submit"))){
-            return;
-    }
-            clickOnElement(By.linkText("add new"));
-        }
-    }
-
-
+}
