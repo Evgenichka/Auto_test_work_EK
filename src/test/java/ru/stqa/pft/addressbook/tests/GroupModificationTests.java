@@ -18,7 +18,7 @@ public class GroupModificationTests extends TestBase {
     public void ensurePreconditions() {
         if (appManager.group().all().isEmpty()) {
             appManager.goTo().groupPage();
-            appManager.group().create(new GroupData().withName("test1"));
+            appManager.group().create(new GroupData().withName("group1"));
         }
     }
 
@@ -58,30 +58,3 @@ public class GroupModificationTests extends TestBase {
 //
 //}
 
-//@Test
-//public void testGroupModification1() {
-//    appManager.getNavigationHelper().goToGroupPage();
-//    if (! appManager.getGroupHelper().isThereAGroup()) {
-//        appManager.getGroupHelper().createGroup(new GroupData("test1", null, null));
-//    }
-//
-//    List<GroupData> before = appManager.getGroupHelper().getGroupList();
-//    int index = before.size() - 1;
-//    GroupData group = new GroupData(before.get(index).getId(), "test1", "test2", "test3");
-//    appManager.getGroupHelper().selectGroup(index);
-//    appManager.getGroupHelper().initGroupModification();
-//    appManager.getGroupHelper().fillGroupForm(group);
-//    appManager.getGroupHelper().submitGroupModification();
-//    appManager.getGroupHelper().returnToGroupPage();
-//    List<GroupData> after = appManager.getGroupHelper().getGroupList();
-//    Assertions.assertEquals(after.size(), before.size());
-//
-//
-//    before.remove(index);
-//    before.add(group);
-//    Comparator<? super GroupData> byId = (g1, g2) ->Integer.compare(g1.getId(), g2.getId());
-//    before.sort(byId);
-//    after.sort(byId);
-//    Assertions.assertEquals(before, after);
-//}
-//    }

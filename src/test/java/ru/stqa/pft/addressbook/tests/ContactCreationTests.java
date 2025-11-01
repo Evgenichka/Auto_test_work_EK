@@ -67,47 +67,6 @@ public class ContactCreationTests extends TestBase {
 }
 
 
-//    @BeforeEach
-//    public void goToHomePage() {
-//        appManager.goTo().HomePage();
-//    }
-//
-//    @Test
-//    public void testContactCreation() {
-//        Contacts beforeContactList = (Contacts) appManager.contact().all();
-//        ContactData contactThatWillBeCreated = new ContactData()
-//                .withFirstName("Иван")
-//                .withMiddleName("Иванович")
-//                .withLastName("Иванов")
-//                .withNickname("ivanov")
-//                .withCompany("Яндекс")
-//                .withAddress("Москва, ул. Тверская, д. 1")
-//                .withFirstEmail("ivan@example.com")
-//                .withSecondEmail("ivan.second@example.com")
-//                .withThirdEmail("ivan.third@example.com")
-//                .withGroup("Тестовая группа")
-//                .withHomePhone("+7 (495) 123-45-67")
-//                .withMobilePhone("+7 (985) 461-23-12")
-//                .withWorkPhone("+7 (495) 987-65-43");
-//
-//        appManager.goTo().contactPage();
-//        appManager.contact().create(contactThatWillBeCreated);
-//
-//        assertThat(appManager.contact().count(), equalTo(beforeContactList.size() + 1));
-//        Contacts afterContactList = (Contacts) appManager.contact().all();
-//
-//        OptionalInt maxIdOptional = afterContactList.stream().filter(Objects::nonNull)
-//                .mapToInt(ContactData::getId)
-//                .max();
-//
-//        int maxId = maxIdOptional.orElseThrow(() -> new RuntimeException("No valid IDs found."));
-//
-//        assertThat(afterContactList, equalTo(beforeContactList.withAdded(contactThatWillBeCreated.withId(maxId))));
-//    }
-//}
-
-
-
 
 
 

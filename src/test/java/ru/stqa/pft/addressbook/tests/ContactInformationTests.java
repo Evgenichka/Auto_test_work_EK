@@ -5,6 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -63,39 +64,31 @@ public class ContactInformationTests extends TestBase {
     public static String cleaned(String phone) {
         return phone.replaceAll("\\s", "").replaceAll("[-()]", "");
     }
-
 }
 
-//import org.junit.jupiter.api.Test;
-//import ru.stqa.pft.addressbook.model.ContactData;
-//
-//
-//import java.util.Arrays;
-//import java.util.stream.Collectors;
-//
-//import static org.hamcrest.CoreMatchers.equalTo;
-//import static org.hamcrest.MatcherAssert.assertThat;
-//
-//public class ContactInformationTests extends TestBase {
-//
 //    @Test
-//    public void testContactPhones() {
-//        appManager.goTo().HomePage(); // Обращаемся к appManager
-//        ContactData contact = appManager.contact().all().iterator().next();
-//        ContactData contactInfoFromEditForm = appManager.contact().infoFromEditForm(contact);
+//    public void testReverseContactInformationComparison() {
+//        // Предварительная подготовка: открываем домашнюю страницу
+//        appManager.goTo().homePage();
 //
-//        assertThat(contact.getAllPhones(), equalTo(mergePhones(contactInfoFromEditForm)));
+//        // Выбор первого контакта из списка (для примера возьмем первый контакт)
+//        List<ContactData> contacts = appManager.contact().all();
+//        ContactData selectedContact = contacts.get(0);
+//
+//        // Открытие формы редактирования и получение полных данных контакта
+//        ContactData detailedContactInfo = appManager.contact().infoFromEditForm(selectedContact);
+//
+//        // Сбор информации о контакте с главной страницы
+//        String homePageInfo = appManager.contact().infoFromHomepage(selectedContact);
+//
+//        // Сравниваем данные с главной страницы с деталями из формы редактирования
+//        assertThat(cleanedUp(homePageInfo), equalTo(detailedContactInfo.getFullDetails()));
 //    }
 //
-//    private String mergePhones(ContactData contact) {
-//        return Arrays.asList(contact.getHomePhone(), contact.getMobilePhone(), contact.getWorkPhone())
-//                .stream().filter((s) -> !s.equals(""))
-//                .map(ContactInformationTests::cleaned)
-//                .collect(Collectors.joining("\n"));
-//    }
-//
-//    public static String cleaned(String phone) {
-//        return phone.replaceAll("\\s", "").replaceAll("[-()]", "");
+//    private String cleanedUp(String data) {
+//        // Функция для нормализации текста (убираем лишние пробелы и символы)
+//        return data.trim().replaceAll("\\s+", " ");
 //    }
 //
 //}
+
