@@ -23,11 +23,13 @@
         <junit-platform-launcher.version>6.0.0</junit-platform-launcher.version>
         <slf4j-simple.version>2.0.17</slf4j-simple.version>
         <aspectj.version>1.9.19</aspectj.version>
-        <selenium.verion>4.35.0</selenium.verion>
+        <selenium.version>4.35.0</selenium.version>
         <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
         <allure.maven.plugin.version>2.12.0</allure.maven.plugin.version>
         <lombok.version>1.18.42</lombok.version>
         <java-hamcrest.version>2.0.0.0</java-hamcrest.version>
+        <commons-csv.version>1.14.1</commons-csv.version>
+        <xstream.version>1.4.21</xstream.version>
     </properties>
 
     <dependencyManagement>
@@ -65,6 +67,12 @@
             <version>${junit.jupiter.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.9.2</version>
+            <scope>test</scope>
+        </dependency>
 
         <!-- TestNG -->
         <dependency>
@@ -74,7 +82,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Allure adapters -->
+        <!-- Allure адапторы -->
         <dependency>
             <groupId>io.qameta.allure</groupId>
             <artifactId>allure-junit5</artifactId>
@@ -98,7 +106,6 @@
         </dependency>
 
         <!-- Slf4j-simple -->
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
@@ -110,7 +117,7 @@
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
-            <version>${selenium.verion}</version>
+            <version>${selenium.version}</version>
         </dependency>
 
         <!-- Lombok -->
@@ -129,6 +136,43 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Apache Commons CSV -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>${commons-csv.version}</version>
+        </dependency>
+
+        <!-- XStream для работы с XML -->
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>${xstream.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jcommander</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>3.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20250517</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.13.2</version>
+        </dependency>
+        <!-- Dependency for OpenCSV -->
+        <dependency>
+            <groupId>com.opencsv</groupId>
+            <artifactId>opencsv</artifactId>
+            <version>5.12.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -139,8 +183,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
+                    <reportsDirectory>${project.build.directory}/allure-results</reportsDirectory>
                     <argLine>
-                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+                        -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar
                     </argLine>
                     <properties>
                         <property>
@@ -156,6 +201,9 @@
                 <groupId>io.qameta.allure</groupId>
                 <artifactId>allure-maven</artifactId>
                 <version>${allure.maven.plugin.version}</version>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/allure-results</outputDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <id>allure-report</id>
@@ -171,6 +219,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.1.2</version>
                 <configuration>
                     <excludes>
                         <exclude>
@@ -182,6 +231,22 @@
             </plugin>
         </plugins>
     </build>
+    <!-- Профили для запуска тестов с фильтром по тегам -->
+    <profiles>
+        <profile>
+            <id>groups-profile</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>${maven.surefire.plugin.version}</version>
+                        <configuration>
+                            <groups>contacts</groups> <!-- Указываем группу для фильтрации -->
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
-

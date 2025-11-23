@@ -34,7 +34,9 @@ public class ContactModificationTests extends TestBase {
                 .withLastName("Test3Name").withNickname("Test4Nickname")
                 .withCompany("Test5Company").withAddress("Test6Address")
                 .withFirstEmail("test7@mail.com").withGroup("GroupName")
-                .withHomePhone("").withMobilePhone("").withWorkPhone("");
+                .withHomePhone("344444")
+                .withMobilePhone("3334242343")
+                .withWorkPhone("23421421");
 
         appManager.contact().edit(contactDataForEditing);
         assertThat(appManager.contact().count(), equalTo(beforeContactList.size()));

@@ -70,6 +70,7 @@ public class ContactHelper extends HelperBase {
         typeIntoField(By.name("home"), contactData.getHomePhone());
         typeIntoField(By.name("mobile"), contactData.getMobilePhone());
         typeIntoField(By.name("work"), contactData.getWorkPhone());
+    //    attach(By.name("photo"), contactData.getPhoto());
 
         if (creationOrEditingForm){
             if (contactData.getGroup() !=null) {

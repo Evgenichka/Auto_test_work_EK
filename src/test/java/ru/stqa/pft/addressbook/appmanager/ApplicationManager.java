@@ -28,6 +28,7 @@ public class ApplicationManager {
             webDriver = new FirefoxDriver();
         } else if (selectedBrowser.equals(Browser.CHROME)) {
             webDriver = new ChromeDriver();
+            webDriver.manage().window().maximize();
         } else if (selectedBrowser.equals(Browser.EDGE)) {
             webDriver = new EdgeDriver();
         }

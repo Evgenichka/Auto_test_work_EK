@@ -1,0 +1,38 @@
+<list>
+  <ru.stqa.pft.addressbook.model.ContactData>
+    <id>0</id>
+    <firstName>Petya 0</firstName>
+    <lastName>Petrov 0</lastName>
+    <address>penza 0</address>
+    <firstEmail>pepepe0@gmail.com</firstEmail>
+    <homePhone>1234567 0</homePhone>
+    <mobilePhone>581234567890</mobilePhone>
+  </ru.stqa.pft.addressbook.model.ContactData>
+  <ru.stqa.pft.addressbook.model.ContactData>
+    <id>0</id>
+    <firstName>Petya 1</firstName>
+    <lastName>Petrov 1</lastName>
+    <address>penza 1</address>
+    <firstEmail>pepepe1@gmail.com</firstEmail>
+    <homePhone>1234567 1</homePhone>
+    <mobilePhone>581234567891</mobilePhone>
+  </ru.stqa.pft.addressbook.model.ContactData>
+  <ru.stqa.pft.addressbook.model.ContactData>
+    <id>0</id>
+    <firstName>Petya 2</firstName>
+    <lastName>Petrov 2</lastName>
+    <address>penza 2</address>
+    <firstEmail>pepepe2@gmail.com</firstEmail>
+    <homePhone>1234567 2</homePhone>
+    <mobilePhone>581234567892</mobilePhone>
+  </ru.stqa.pft.addressbook.model.ContactData>
+  <ru.stqa.pft.addressbook.model.ContactData>
+    <id>0</id>
+    <firstName>Petya 3</firstName>
+    <lastName>Petrov 3</lastName>
+    <address>penza 3</address>
+    <firstEmail>pepepe3@gmail.com</firstEmail>
+    <homePhone>1234567 3</homePhone>
+    <mobilePhone>581234567893</mobilePhone>
+  </ru.stqa.pft.addressbook.model.ContactData>
+</list>
