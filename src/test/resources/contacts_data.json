@@ -1,0 +1,26 @@
+[
+  {
+    "firstName": "Petya 0",
+    "lastName": "Petrov 0",
+    "address": "penza 0",
+    "homePhone": "1234567 0",
+    "mobilePhone": "581234567890",
+    "email": "severus@example.com"
+  },
+  {
+    "firstName": "Vanya 1",
+    "lastName": "Kuznetsov 1",
+    "address": "penza 1",
+    "homePhone": "1234567 1",
+    "mobilePhone": "581234567891",
+    "email": "severus@example.com"
+  },
+  {
+    "firstName": "Petya 2",
+    "lastName": "Bistrov 2",
+    "address": "penza 2",
+    "homePhone": "1234567 2",
+    "mobilePhone": "581234567892",
+    "email": "severus@example.com"
+  }
+]

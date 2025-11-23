@@ -1,90 +1,178 @@
 
 package ru.stqa.pft.addressbook.model;
+import com.google.gson.annotations.Expose;
+import lombok.Getter;
+import lombok.Setter;
+import com.google.gson.annotations.Expose;
+import lombok.*;
+
+import java.io.File;
 import java.util.Objects;
 
+
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode(of = {"firstName", "lastName", "email"})
 public class ContactData {
 
     private int id;
+    @Expose
     private String firstName;
     private String middleName;
+    @Expose
     private String lastName;
     private String nickname;
     private String company;
+    @Expose
     private String address;
     private String allEmail;
+    @Expose
+    private String email;
     private String firstEmail;
     private String secondEmail;
     private String thirdEmail;
+    @Expose
     private String group;
     private String allPhones;
+    @Expose
     private String homePhone;
+    @Expose
     private String mobilePhone;
+    @Expose
     private String workPhone;
 
-    public int getId() {
-        return id;
+    public ContactData() {
+
     }
 
-    public String getFirstName() {
+    //    @Getter
+//    private File photo; // Поле для хранения фотографии
+//
+//    // Удобный метод для задания фотографии
+//    public ContactData withPhoto(File photo) {
+//        this.photo = photo;
+//        return this;
+//    }
+    public String getName() {
         return firstName;
     }
 
-    public String getMiddleName() {
-        return middleName;
+    public ContactData(String firstName, String lastName, String address, String homePhone, String mobilePhone, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.homePhone = homePhone;
+        this.mobilePhone = mobilePhone;
+        this.email = email;
     }
 
-    public String getLastName() {
-        return lastName;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getCompany() {
-        return company;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getFirstEmail() {
-        return firstEmail;
-    }
-
-    public String getSecondEmail() {
-        return secondEmail;
-    }
-
-    public String getThirdEmail() {
-        return thirdEmail;
-    }
-
-    public String getGroup() {
-        return group;
-    }
-
-    public String getAllPhones() {
-        return allPhones;
-    }
-
-    public String getHomePhone() {
-        return homePhone;
-    }
-
-    public String getMobilePhone() {
-        return mobilePhone;
-    }
-
-    public String getWorkPhone() {
-        return workPhone;
-    }
-
-    public String getAllEmail() {
-        return allEmail;
-    }
-
+//@Getter
+//@Setter
+//public class ContactData {
+//
+//    private int id;
+//    @Expose
+//    private String firstName;
+//    private String middleName;
+//    @Expose
+//    private String lastName;
+//    private String nickname;
+//    private String company;
+//    @Expose
+//    private String address;
+//    private String allEmail;
+//    @SuppressWarnings("unused")
+//    private String email;
+//    private String firstEmail;
+//    private String secondEmail;
+//    private String thirdEmail;
+//    @Expose
+//    private String group;
+//    private String allPhones;
+//    @Expose
+//    private String homePhone;
+//    @Expose
+//    private String mobilePhone;
+//    @Expose
+//    private String workPhone;
+//    @Getter
+//    private File photo; // импортировали класс для работы с файлами, создали геттер и сеттер
+//
+//    public ContactData withPhoto(String photo) {
+//        this.photo = new File(photo);
+//        return this;
+//    }
+//
+//
+//    public int getId() {
+//        return id;
+//    }
+//
+//    public String getFirstName() {
+//        return firstName;
+//    }
+//
+//    public String getMiddleName() {
+//        return middleName;
+//    }
+//
+//    public String getLastName() {
+//        return lastName;
+//    }
+//
+//    public String getNickname() {
+//        return nickname;
+//    }
+//
+//    public String getCompany() {
+//        return company;
+//    }
+//
+//    public String getAddress() {
+//        return address;
+//    }
+//
+//    public String getEmail() {
+//        return firstEmail;
+//    }
+//
+//    public String getFirstEmail() {
+//        return firstEmail;
+//    }
+//
+//    public String getSecondEmail() {
+//        return secondEmail;
+//    }
+//
+//    public String getThirdEmail() {
+//        return thirdEmail;
+//    }
+//
+//    public String getGroup() {
+//        return group;
+//    }
+//
+//    public String getAllPhones() {
+//        return allPhones;
+//    }
+//
+//    public String getHomePhone() {
+//        return homePhone;
+//    }
+//
+//    public String getMobilePhone() {
+//        return mobilePhone;
+//    }
+//
+//    public String getWorkPhone() {
+//        return workPhone;
+//    }
+//
+//    public String getAllEmail() {
+//        return allEmail;
+//    }
+//
     public ContactData withId(int id) {
         this.id = id;
         return this;
@@ -130,6 +218,11 @@ public class ContactData {
         return this;
     }
 
+    public ContactData withEmail(String firstEmail) {
+        this.firstEmail = firstEmail;
+        return this;
+    }
+
     public ContactData withSecondEmail(String secondEmail) {
         this.secondEmail = secondEmail;
         return this;
@@ -164,6 +257,7 @@ public class ContactData {
         this.workPhone = workPhone;
         return this;
     }
+
 
 //    @Override
 //    public boolean equals(Object o) {
