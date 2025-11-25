@@ -9,9 +9,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+import ru.stqa.pft.addressbook.tests.ContactInformationTests;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -19,27 +22,113 @@ public class ContactHelper extends HelperBase {
 
     private Contacts contactsCache = null;
 
-    public Contacts all(){
-        if (contactsCache != null){
+    public Contacts all() {
+        if (contactsCache != null) {
             return new Contacts(contactsCache);
         }
 
         contactsCache = new Contacts();
         List<WebElement> rows = webDriver.findElements(By.name("entry"));
-        for (WebElement row: rows ) {
+        for (WebElement row : rows) {
             List<WebElement> cells = row.findElements(By.tagName("td"));
-            int id = Integer.parseInt(Objects.requireNonNull(cells.get(0).findElement(By.tagName("input")).getAttribute("value")));
+            int id = Integer.parseInt(Objects.requireNonNull(cells.get(0)
+                    .findElement(By.tagName("input"))
+                    .getAttribute("value")));
+
             String lastName = cells.get(1).getText();
             String firstName = cells.get(2).getText();
             String address = cells.get(3).getText();
-            String allEmails = cells.get(4).getText();
-            String allPhones = cells.get(5).getText();
-            contactsCache.add(new ContactData().withId(id).withFirstName(firstName)
-                    .withLastName(lastName).withAddress(address)
-                    .withAllEmails(allEmails).withAllPhones(allPhones));
+
+            // Телефоны
+            String homePhone = cells.get(5).getText();
+            String mobilePhone = cells.get(6).getText();
+            String workPhone = cells.get(7).getText();
+            String allPhones = Stream.of(homePhone, mobilePhone, workPhone)
+                    .filter(s -> !s.isEmpty())
+                    .map(ContactInformationTests::cleaned)
+                    .collect(Collectors.joining("\n"));
+
+            // Email
+            String firstEmail = cells.get(4).getText(); // если в таблице только один email
+            String allEmails = firstEmail; // можно расширить, если несколько email в таблице
+
+            contactsCache.add(new ContactData()
+                    .withId(id)
+                    .withFirstName(firstName)
+                    .withLastName(lastName)
+                    .withAddress(address)
+                    .withAllPhones(allPhones)
+                    .withAllEmails(allEmails)
+            );
         }
         return new Contacts(contactsCache);
     }
+
+//    public Contacts all() {
+//        if (contactsCache != null) {
+//            return new Contacts(contactsCache);
+//        }
+//
+//        contactsCache = new Contacts();
+//        List<WebElement> rows = webDriver.findElements(By.name("entry"));
+//
+//        for (WebElement row : rows) {
+//            List<WebElement> cells = row.findElements(By.tagName("td"));
+//
+//            int id = Integer.parseInt(
+//                    Objects.requireNonNull(
+//                            cells.get(0).findElement(By.tagName("input")).getAttribute("value")
+//                    )
+//            );
+//
+//            String lastName = cells.get(1).getText().trim();
+//            String firstName = cells.get(2).getText().trim();
+//            String address = cells.get(3).getText().trim();
+//
+//            // Нормализация телефонов и emails
+//            String allEmails = normalizeText(cells.get(4).getText());
+//            String allPhones = normalizeText(cells.get(5).getText());
+//
+//            contactsCache.add(new ContactData()
+//                    .withId(id)
+//                    .withFirstName(firstName)
+//                    .withLastName(lastName)
+//                    .withAddress(address)
+//                    .withAllEmails(allEmails)
+//                    .withAllPhones(allPhones)
+//            );
+//        }
+//
+//        return new Contacts(contactsCache);
+//    }
+
+    // Вспомогательный метод для нормализации текста
+    private String normalizeText(String text) {
+        if (text == null) return "";
+        return text.trim().replace("\r\n", "\n");  // заменяем Windows-переносы на Unix-переносы
+    }
+
+//    public Contacts all(){
+//        if (contactsCache != null){
+//            return new Contacts(contactsCache);
+//        }
+//
+//        contactsCache = new Contacts();
+//        List<WebElement> rows = webDriver.findElements(By.name("entry"));
+//        for (WebElement row: rows ) {
+//            List<WebElement> cells = row.findElements(By.tagName("td"));
+//            int id = Integer.parseInt(Objects.requireNonNull(cells.get(0).findElement(By.tagName("input")).getAttribute("value")));
+//            String lastName = cells.get(1).getText();
+//            String firstName = cells.get(2).getText();
+//            String address = cells.get(3).getText();
+//            String allEmails = cells.get(4).getText();
+//            String allPhones = cells.get(5).getText();
+//            contactsCache.add(new ContactData().withId(id).withFirstName(firstName)
+//                    .withLastName(lastName).withAddress(address)
+//                    .withAllEmails(allEmails).withAllPhones(allPhones));
+//        }
+//        return new Contacts(contactsCache);
+//    }
 
     public int count() {
         return webDriver.findElements(By.name("selected[]")).size();
@@ -137,9 +226,9 @@ public class ContactHelper extends HelperBase {
         contactsCache = null;
     }
 
-    public void edit(ContactData contactDataForEditing) {
+    public void update(ContactData contactDataForEditing) {
         initContactEditingById (contactDataForEditing.getId());
-        fillContactForm(contactDataForEditing, false);
+        fillContactForm(contactDataForEditing, true);
         submitContactEditing();
         contactsCache = null;
         returnToHomePage();

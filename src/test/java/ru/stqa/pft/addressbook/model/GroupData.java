@@ -1,6 +1,8 @@
 package ru.stqa.pft.addressbook.model;
 
 import com.google.gson.annotations.Expose;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,14 +14,34 @@ import java.util.Objects;
 @Setter
 @ToString
 @EqualsAndHashCode(of = {"id", "name"})
+@Entity
+@Table(name = "group_list")
 public class GroupData {
+
+
     @Expose
+    @Column(name = "group_name")
     private String name;
     @Expose
+    @Column(name = "group_header")
     private String header;
     @Expose
+    @Column(name = "group_footer")
     private String footer;
-    private int id = 0; // Установим id в 0 по умолчанию
+
+    // Геттеры и сеттеры
+    @Id
+    @XStreamOmitField
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name="group_id")
+    private Integer groupId;
+    private int id;
+    //private int id;
+
+    //    @id
+//    @GeneratedValue(strategy= GenerationType.IDENTITY)
+//    @Column(name = "group_id")
+//    private int id = 0; // Установим id в 0 по умолчанию
 
     // Конструктор
     public GroupData(String name, String header, String footer) {
@@ -54,8 +76,7 @@ public class GroupData {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof GroupData)) return false;
-        GroupData that = (GroupData) o;
+        if (!(o instanceof GroupData that)) return false;
         return id == that.id && Objects.equals(name, that.name);
     }
 

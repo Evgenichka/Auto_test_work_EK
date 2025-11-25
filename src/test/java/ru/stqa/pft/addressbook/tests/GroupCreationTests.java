@@ -11,6 +11,8 @@ import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ru.stqa.pft.addressbook.model.GroupData;
 
 import java.io.BufferedReader;
@@ -28,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class GroupCreationTests extends TestBase {
+
+    Logger logger = LoggerFactory.getLogger(GroupCreationTests.class);
 
     private final List<GroupData> storedGroups = new ArrayList<>();
 
@@ -92,11 +96,14 @@ public class GroupCreationTests extends TestBase {
     @ValueSource(strings = {"data"})
     @Tag("groups")
     public void testGroupCreation(String ignored) throws Exception {
+        logger.info("Start test GroupCreation");
         List<GroupData> groups = loadGroupsFromJson();
         for (GroupData group : groups) {
             // Ваш тестовый сценарий для каждой группы
             System.out.println("Testing group: " + group.getName());
+
         }
+        logger.info("Stop test GroupCreation");
     }
 
     // Параметризованный тест

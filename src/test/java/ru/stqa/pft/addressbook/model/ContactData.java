@@ -1,64 +1,78 @@
-
 package ru.stqa.pft.addressbook.model;
-import com.google.gson.annotations.Expose;
-import lombok.Getter;
-import lombok.Setter;
-import com.google.gson.annotations.Expose;
-import lombok.*;
 
-import java.io.File;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.io.Serializable;
 import java.util.Objects;
 
-
+@Entity
+@Table(name = "addressbook")
 @Getter
 @Setter
-@ToString
-@EqualsAndHashCode(of = {"firstName", "lastName", "email"})
-public class ContactData {
+@NoArgsConstructor
+public class ContactData implements Serializable {
 
+    @Id
+    @Column(name = "id")
     private int id;
-    @Expose
+
+    @Column(name = "firstname")
     private String firstName;
+
+    @Column(name = "middlename")
     private String middleName;
-    @Expose
+
+    @Column(name = "lastname")
     private String lastName;
+
+    @Column(name = "nickname")
     private String nickname;
+
+    @Column(name = "company")
     private String company;
-    @Expose
+
+    @Column(name = "address")
     private String address;
-    private String allEmail;
-    @Expose
+
+    @Column(name = "email")
     private String email;
-    private String firstEmail;
+
+    @Column(name = "email2")
     private String secondEmail;
+
+    @Column(name = "email3")
     private String thirdEmail;
-    @Expose
-    private String group;
-    private String allPhones;
-    @Expose
+
+    @Column(name = "home")
     private String homePhone;
-    @Expose
+
+    @Column(name = "mobile")
     private String mobilePhone;
-    @Expose
+
+    @Column(name = "work")
     private String workPhone;
 
-    public ContactData() {
+    @Column(name = "deprecated")
+    private String deprecated;
+    @Transient
+    private String firstEmail;
 
-    }
+    @Transient
+    private String group;
+    @Transient
+    private String allEmail;
+    @Transient
+    private String allPhones;
 
-    //    @Getter
-//    private File photo; // Поле для хранения фотографии
-//
-//    // Удобный метод для задания фотографии
-//    public ContactData withPhoto(File photo) {
-//        this.photo = photo;
-//        return this;
-//    }
-    public String getName() {
-        return firstName;
-    }
+    // -----------------------------------------------------
+    //  КОНСТРУКТОРЫ
+    // -----------------------------------------------------
 
-    public ContactData(String firstName, String lastName, String address, String homePhone, String mobilePhone, String email) {
+    public ContactData(String firstName, String lastName, String address,
+                       String homePhone, String mobilePhone, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -67,112 +81,10 @@ public class ContactData {
         this.email = email;
     }
 
-//@Getter
-//@Setter
-//public class ContactData {
-//
-//    private int id;
-//    @Expose
-//    private String firstName;
-//    private String middleName;
-//    @Expose
-//    private String lastName;
-//    private String nickname;
-//    private String company;
-//    @Expose
-//    private String address;
-//    private String allEmail;
-//    @SuppressWarnings("unused")
-//    private String email;
-//    private String firstEmail;
-//    private String secondEmail;
-//    private String thirdEmail;
-//    @Expose
-//    private String group;
-//    private String allPhones;
-//    @Expose
-//    private String homePhone;
-//    @Expose
-//    private String mobilePhone;
-//    @Expose
-//    private String workPhone;
-//    @Getter
-//    private File photo; // импортировали класс для работы с файлами, создали геттер и сеттер
-//
-//    public ContactData withPhoto(String photo) {
-//        this.photo = new File(photo);
-//        return this;
-//    }
-//
-//
-//    public int getId() {
-//        return id;
-//    }
-//
-//    public String getFirstName() {
-//        return firstName;
-//    }
-//
-//    public String getMiddleName() {
-//        return middleName;
-//    }
-//
-//    public String getLastName() {
-//        return lastName;
-//    }
-//
-//    public String getNickname() {
-//        return nickname;
-//    }
-//
-//    public String getCompany() {
-//        return company;
-//    }
-//
-//    public String getAddress() {
-//        return address;
-//    }
-//
-//    public String getEmail() {
-//        return firstEmail;
-//    }
-//
-//    public String getFirstEmail() {
-//        return firstEmail;
-//    }
-//
-//    public String getSecondEmail() {
-//        return secondEmail;
-//    }
-//
-//    public String getThirdEmail() {
-//        return thirdEmail;
-//    }
-//
-//    public String getGroup() {
-//        return group;
-//    }
-//
-//    public String getAllPhones() {
-//        return allPhones;
-//    }
-//
-//    public String getHomePhone() {
-//        return homePhone;
-//    }
-//
-//    public String getMobilePhone() {
-//        return mobilePhone;
-//    }
-//
-//    public String getWorkPhone() {
-//        return workPhone;
-//    }
-//
-//    public String getAllEmail() {
-//        return allEmail;
-//    }
-//
+    // -----------------------------------------------------
+    //  БИЛДЕР-МЕТОДЫ "with..."
+    // -----------------------------------------------------
+
     public ContactData withId(int id) {
         this.id = id;
         return this;
@@ -208,18 +120,8 @@ public class ContactData {
         return this;
     }
 
-    public ContactData withAllEmails(String allEmail) {
-        this.allEmail = allEmail;
-        return this;
-    }
-
-    public ContactData withFirstEmail(String firstEmail) {
-        this.firstEmail = firstEmail;
-        return this;
-    }
-
-    public ContactData withEmail(String firstEmail) {
-        this.firstEmail = firstEmail;
+    public ContactData withEmail(String email) {
+        this.email = email;
         return this;
     }
 
@@ -230,16 +132,6 @@ public class ContactData {
 
     public ContactData withThirdEmail(String thirdEmail) {
         this.thirdEmail = thirdEmail;
-        return this;
-    }
-
-    public ContactData withGroup(String group) {
-        this.group = group;
-        return this;
-    }
-
-    public ContactData withAllPhones(String allPhones) {
-        this.allPhones = allPhones;
         return this;
     }
 
@@ -258,43 +150,41 @@ public class ContactData {
         return this;
     }
 
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (!(o instanceof ContactData)) return false;
-//        ContactData that = (ContactData) o;
-//        return getId() == that.getId() &&
-//                Objects.equals(getFirstName(), that.getFirstName()) &&
-//                Objects.equals(getLastName(), that.getLastName()) &&
-//                Objects.equals(getEmail(), that.getEmail()) &&
-//                // остальные поля...
-//                ;
-//    }
+    // -----------------------------------------------------
+    //  equals & hashCode
+    // -----------------------------------------------------
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o) return true;
+        if (!(o instanceof ContactData)) return false;
         ContactData that = (ContactData) o;
-        return id == that.id && Objects.equals(firstName, that.firstName) && Objects.equals(lastName, that.lastName);
+        return id == that.id &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName);
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + Objects.hashCode(firstName);
-        result = 31 * result + Objects.hashCode(lastName);
-        return result;
+        return Objects.hash(id, firstName, lastName);
     }
 
+    // -----------------------------------------------------
+    //  Дополнительные методы (если нужны)
+    // -----------------------------------------------------
 
+    public String getName() {
+        return firstName;
+    }
 
+    public ContactData withFirstEmail(String firstEmail) { this.firstEmail = firstEmail; return this; }
+
+    public ContactData withGroup(String group) { this.group = group; return this; }
+
+    public ContactData withAllEmails(String allEmail) { this.allEmail = allEmail; return this; }
+
+    public ContactData withAllPhones(String allPhones) { this.allPhones = allPhones; return this; }
 }
-
-
-
-
 
 ////
 ////import lombok.Data;

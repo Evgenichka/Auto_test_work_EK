@@ -1,0 +1,1 @@
+{"uuid":"1618ee9a-7b0d-48d8-be94-38a823eb507e","name":"ru.stqa.pft.addressbook.tests.HbConnectionTest","children":["2156aa05-38df-4b44-bb28-375d5bc9e02e"],"befores":[{"name":"setUp","status":"passed","stage":"finished","description":"","steps":[],"attachments":[],"parameters":[],"start":1763936746356,"stop":1763936753600}],"afters":[],"start":1763936746177,"stop":1763936754827}
